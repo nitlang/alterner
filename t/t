@@ -1,0 +1,8 @@
+#!/bin/sh
+
+rm -rf alt/ 2>/dev/null
+
+../alterner.pl test.java
+../alterner.pl --start '/*' --end '*/' test.c
+
+diff -u sav alt
