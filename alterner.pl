@@ -70,8 +70,9 @@ if ($#ARGV == -1) {
 	usage("No input file.");
 }
 
-# Do the job
-foreach my $file (@ARGV) {
+# Generate alternatives from the specified input-file
+sub process_alts($) {
+	my $file = shift;
 	# Read the file
 	open my $in, "<", $file or die "$file: $!";
 	my @lines = <$in>;
@@ -112,4 +113,9 @@ foreach my $file (@ARGV) {
 		}
 		close $out;
 	}
+}
+
+# Do the job
+foreach my $file (@ARGV) {
+	process_alts($file);
 }
