@@ -2,7 +2,11 @@
 
 rm -rf alt/ 2>/dev/null
 
-../alterner.pl test.java
-../alterner.pl --start '/*' --end '*/' test.c
+for f in *.java; do
+	../alterner.pl "$f"
+done
+for f in *.c; do
+	../alterner.pl --start '/*' --end '*/' "$f"
+done
 
 diff -u sav alt
