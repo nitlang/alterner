@@ -70,9 +70,10 @@ if ($#ARGV == -1) {
 	usage("No input file.");
 }
 
-# Generate alternatives from the specified input-file
-sub process_alts($) {
+# Generate alternatives from the specified input-file using a specific altmark
+sub process_alts($$) {
 	my $file = shift;
+	my $altmark = shift;
 	# Read the file
 	open my $in, "<", $file or die "$file: $!";
 	my @lines = <$in>;
@@ -81,12 +82,13 @@ sub process_alts($) {
 	# Collect alternatives
 	my %alt;
 	foreach my $l (@lines) {
-		while ($l =~ /(\Q$start\E(alt\d*\b))/g) {
+		while ($l =~ /(\Q$start\E($altmark\d*\b))/g) {
 			$alt{$1} = $2;
 		}
 	}
 	my @alt = sort(keys(%alt));
 
+	my @files;
 	# Process each alternatives
 	foreach my $alt (@alt) {
 		# Exctact the basename and the suffix
@@ -100,6 +102,7 @@ sub process_alts($) {
 				mkdir $directory or die "$directory: $!";
 			}
 		}
+		push @files, $outfile;
 
 		# Write the alternative
 		open my $out, ">", $outfile or die "$outfile: $!";
@@ -113,9 +116,38 @@ sub process_alts($) {
 		}
 		close $out;
 	}
+	return @files;
+}
+
+# Generate combination of alternatives from the specified input-file
+sub process_xalts($) {
+	my $file = shift;
+	# Read the file
+	open my $in, "<", $file or die "$file: $!";
+	my @lines = <$in>;
+	close($file);
+
+	# Collect combination of alternatives
+	my %alt;
+	foreach my $l (@lines) {
+		while ($l =~ /\Q$start\E(\d*alt)\d*\b/g) {
+			$alt{$1} = $1;
+		}
+	}
+	my @alt = sort(keys(%alt));
+
+	my @files = $file;
+	# Process each combination of alternatives
+	foreach my $alt (@alt) {
+		my @newfiles;
+		foreach my $f (@files) {
+			push @newfiles, process_alts($f, $alt);
+		}
+		push @files, @newfiles;
+	}
 }
 
 # Do the job
 foreach my $file (@ARGV) {
-	process_alts($file);
+	process_xalts($file);
 }
