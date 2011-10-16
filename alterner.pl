@@ -81,7 +81,7 @@ sub process_alts($) {
 	# Collect alternatives
 	my %alt;
 	foreach my $l (@lines) {
-		while ($l =~ /(\Q$start\E(alt\d+\b))/g) {
+		while ($l =~ /(\Q$start\E(alt\d*\b))/g) {
 			$alt{$1} = $2;
 		}
 	}
