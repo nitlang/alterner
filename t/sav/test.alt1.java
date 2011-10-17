@@ -7,4 +7,3 @@ right//alt1
 //alt1
 
 many //alt5000 one
-one //alt two
