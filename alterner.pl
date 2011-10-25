@@ -79,11 +79,13 @@ sub process_alts($$) {
 	my @lines = <$in>;
 	close($file);
 
+	my $prefix = $start . $altmark;
+
 	# Collect alternatives
 	my %alt;
 	foreach my $l (@lines) {
-		while ($l =~ /(\Q$start\E($altmark\d+\b))/g) {
-			$alt{$1} = $2;
+		while ($l =~ /\Q$prefix\E(\d+)\b/g) {
+			$alt{$1} = 1;
 		}
 	}
 	my @alt = sort(keys(%alt));
@@ -95,7 +97,7 @@ sub process_alts($$) {
 		my ($name, $path, $suffix) = fileparse($file, qr/\.[^\.]*/);
 
 		# Compute filename of the alternative
-		my $outfile = $name . "." . $alt{$alt} . $suffix;
+		my $outfile = $name . "." . $altmark . $alt . $suffix;
 		if (defined $directory && $directory ne ".") {
 			$outfile = $directory . "/" . $outfile;
 			if (! -d $directory) {
@@ -109,8 +111,8 @@ sub process_alts($$) {
 		print "$outfile\n";
 		foreach my $l (@lines) {
 			my $l2 = $l;
-			if ($l =~ /^(\s*)(.*)(\s*)\Q$alt\E\b([ \t]*)(.*)([ \t]*\Q$end\E\s*)$/) {
-				$l2 = "$1$5$3$alt$4$2$6";
+			if ($l =~ /^(\s*)(.*)(\s*)(\Q$prefix$alt\E)\b([ \t]*)(.*)([ \t]*\Q$end\E\s*)$/) {
+				$l2 = "$1$6$3$4$5$2$7";
 			}
 			print $out $l2 or die "$outfile: $!";
 		}
