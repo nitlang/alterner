@@ -64,6 +64,33 @@ Lists and ranges can be used together and multiple alternatives can appears on a
     base //alt1,3-4 version for 1, 3, and 4 //alt2,5 version for 2 and 5
 
 
+Combinations
+------------
+
+Each directive belong to a given group: either to the anonymous group (by default) or to a numbered group.
+The number of the group is noted before the 'alt'.
+
+Example:
+
+	base version //1alt1 first alternative of the first group
+	base version //2alt1 first alternative of the second group
+	base version //2alt2 second alternative of the second group
+
+alterner.pl also produce alternative files by combining the groups.
+With two groups, is means that at least three alternative files are created: one with the first group, one with the second group, and one with both.
+
+If there is more than one alternative by group, even more alternative files are created.
+With the previous example, 5 alternative files are created:
+
+* one with 1alt1 activated
+* one with 2alt1 activated
+* one with 2alt2 activated
+* one with 1alt1 and 2alt1 activated
+* one with 1alt1 and 2alt2 activated
+
+Be careful with groups since the number of alternative file generated increase rapidly.
+For instance, with 4 groups of 4 alternatives each, 624 alternative files are generated.
+
 Usage of alterner.pl
 --------------------
 
@@ -71,6 +98,7 @@ alterner.pl [options] input-file.ext
 
 Produce alternatives of input-file.ext according to the alternation directives present in the file.
 By default, alternatives are named input-file.altX.ext (where X is a number) and are generated in a alt/ sub-directory.
+If groups are used, the altX is replaced by YaltX (where Y is the number of the group) and the combination of multiple groups produce multiple YaltX (separated with dots).
 If the directory does not exist, it is created.
 The path of input-file.ext is not considered: only the base name of the file and its extension are used to name the alternatives.
 
@@ -143,3 +171,16 @@ Example with directives in C comments.
     $ cat alt/input-file.alt2.c
     second /*alt2 base /*alt1 first */
 
+
+Example with groups.
+
+    $ cat example.txt
+    first //alt1 second //alt2 third
+    first //2alt1 second
+
+    $ alterner.pl exaple.txt
+    example.alt1.txt
+    example.alt2.txt
+    example.2alt1.txt
+    example.alt1.2alt1.txt
+    example.alt2.2alt1.txt
