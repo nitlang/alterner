@@ -48,6 +48,22 @@ Example:
     base version //alt1 version of alternative 1 //alt2 version of alternative 2
 
 
+Lists and ranges
+----------------
+
+A single directive can be associated to more than one alternative version.
+Directives for multiple alternatives are declared with a list (separated with a comma) or with a range (indicated with a dash).
+
+Example:
+
+    base version //alt1,3 version of alternative 1 and 3
+    base version //alt2-4 version of alternatives 2, 3 and 4
+
+Lists and ranges can be used together and multiple alternatives can appears on a single line.
+
+    base //alt1,3-4 version for 1, 3, and 4 //alt2,5 version for 2 and 5
+
+
 Usage of alterner.pl
 --------------------
 
