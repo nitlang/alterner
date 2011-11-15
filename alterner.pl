@@ -70,6 +70,24 @@ if ($#ARGV == -1) {
 	usage("No input file.");
 }
 
+# Is $_[0] triggers the alternative directive $[1]?
+sub triggers_alt($$) {
+	my $number = shift;
+	my $directive = shift;
+	foreach my $a (split ",", $directive) {
+		if ($a =~ /^(\d+)-(\d+)$/) {
+			if ($1 <= $number && $number <= $2) {
+				return 1;
+			}
+		} else {
+			if ($number == $a) {
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
 # Generate alternatives from the specified input-file using a specific altmark
 sub process_alts($$) {
 	my $file = shift;
@@ -84,8 +102,10 @@ sub process_alts($$) {
 	# Collect alternatives
 	my %alt;
 	foreach my $l (@lines) {
-		while ($l =~ /\Q$prefix\E(\d+)\b/g) {
-			$alt{$1} = 1;
+		while ($l =~ /\Q$prefix\E([\d,-]+)\b/g) {
+			for my $a (split /[,-]/, $1) {
+				$alt{$a} = 1;
+			}
 		}
 	}
 	my @alt = sort(keys(%alt));
@@ -111,7 +131,13 @@ sub process_alts($$) {
 		print "$outfile\n";
 		foreach my $l (@lines) {
 			my $l2 = $l;
-			if ($l =~ /^(\s*)(.*)(\s*)(\Q$prefix$alt\E)\b([ \t]*)(.*)([ \t]*\Q$end\E\s*)$/) {
+			my $selected;
+			while ($l =~ /(\Q$prefix\E([\d,-]+))\b/g) {
+				if (triggers_alt $alt, $2) {
+					$selected = $1;
+				}
+			}
+			if ($selected && $l =~ /^(\s*)(.*)(\s*)(\Q$selected\E)([ \t]*)(.*)([ \t]*\Q$end\E\s*)$/) {
 				$l2 = "$1$6$3$4$5$2$7";
 			}
 			print $out $l2 or die "$outfile: $!";
