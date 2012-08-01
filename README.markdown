@@ -141,6 +141,11 @@ Options
   1. alternation directives are ignored if the end pattern is not present at the end of the line;
   2. the end pattern is not swapped when a directive is applied (it means the end pattern stay at the end of the line).
 
+* `--altsep` separator
+
+  Separator used in the name of the generated file betwen the basename of the original file and the alternative mark.
+  By default, it is `.`.
+
 Examples
 --------
 

@@ -23,6 +23,7 @@ use File::Basename;
 my $directory = "alt"; # The directory where alternatives will be generated.
 my $start = "//"; # The marker at the begin of a directive (usually the start of a comment).
 my $end = ""; # The marker at the end of the line (usually the end of a comment)
+my $altsep = "."; # The separator used in generated file between the basename and the altmark.
 
 sub usage(;$) {
 	my $msg = shift;
@@ -51,6 +52,10 @@ while (@ARGV && !$stop) {
 		shift @ARGV;
 	} elsif ($arg eq "--end") {
 		$end = $val or usage "$arg requires a pattern.";
+		shift @ARGV;
+		shift @ARGV;
+	} elsif ($arg eq "--altsep") {
+		$altsep = $val or usage "$arg requires a pattern.";
 		shift @ARGV;
 		shift @ARGV;
 	} elsif ($arg eq "-h" || $arg eq "--help") { 
@@ -117,7 +122,7 @@ sub process_alts($$) {
 		my ($name, $path, $suffix) = fileparse($file, qr/\.[^\.]*/);
 
 		# Compute filename of the alternative
-		my $outfile = $name . "." . $altmark . $alt . $suffix;
+		my $outfile = $name . $altsep . $altmark . $alt . $suffix;
 		if (defined $directory && $directory ne ".") {
 			$outfile = $directory . "/" . $outfile;
 			if (! -d $directory) {
