@@ -102,7 +102,7 @@ sub process_alts($$) {
 	# Collect alternatives
 	my %alt;
 	foreach my $l (@lines) {
-		while ($l =~ /\Q$prefix\E([\d,-]+)\b/g) {
+		while ($l =~ /\Q$prefix\E([\d,-]+)(\Q$start\E|\b)/g) {
 			for my $a (split /[,-]/, $1) {
 				$alt{$a} = 1;
 			}
@@ -132,7 +132,7 @@ sub process_alts($$) {
 		foreach my $l (@lines) {
 			my $l2 = $l;
 			my $selected;
-			while ($l =~ /(\Q$prefix\E([\d,-]+))\b/g) {
+			while ($l =~ /(\Q$prefix\E([\d,-]+)(\Q$start\E|\b))/g) {
 				if (triggers_alt $alt, $2) {
 					$selected = $1;
 				}
@@ -158,7 +158,7 @@ sub process_xalts($) {
 	# Collect combination of alternatives
 	my %alt;
 	foreach my $l (@lines) {
-		while ($l =~ /\Q$start\E(\d*alt)\d+\b/g) {
+		while ($l =~ /\Q$start\E(\d*alt)\d+(\Q$start\E|\b)/g) {
 			$alt{$1} = $1;
 		}
 	}

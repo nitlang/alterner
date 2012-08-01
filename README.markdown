@@ -15,6 +15,9 @@ An line containing an alternation directive looks like
 
 where "//alt1" is the alternation directive (note there is no space between the "//" and the "alt" nor between the "alt" and the number).
 
+Note: an alternation directive can also be terminated by a '//'.
+Eg.
+    standard text //alt1// alternative text
 
 The first principle is that the alternation is produced by swapping the right part of the directive with its left part.
 
@@ -121,6 +124,9 @@ Options
   This option is used to indicate what starts comments in the language.
   By default, the start pattern is //.
   For example, --start '#' means that the alternatives are #alt1, #alt2, etc.
+
+  Note: an alternation directive can also be terminated the start pattern.
+  For example, --start '#' means that the alternatives can also be #alt1#, #alt2#, etc.
 
 * --end pattern
 
