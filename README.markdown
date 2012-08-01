@@ -13,18 +13,19 @@ An line containing an alternation directive looks like
 
     standard text //alt1 alternative text
 
-where "//alt1" is the alternation directive (note there is no space between the "//" and the "alt" nor between the "alt" and the number).
+where `//alt1` is the alternation directive (note there is no space between the `//` and the `alt` nor between the `alt` and the number).
 
-Note: an alternation directive can also be terminated by a '//'.
+Note: an alternation directive can also be terminated by a `//`.
 Eg.
+
     standard text //alt1// alternative text
 
 The first principle is that the alternation is produced by swapping the right part of the directive with its left part.
 
-The basic idea behind alterner.pl is that if // is mark the start of a comment for your input language then:
+The basic idea behind alterner.pl is that if `//` marks the start of a comment for your input language then:
 
-* if the file is used unmodified, the useful part of the line will be "standard text";
-* if the alternative version is used, the useful part of the line will be "alternative text".
+* if the file is used unmodified, the useful part of the line will be `standard text`;
+* if the alternative version is used, the useful part of the line will be `alternative text`.
 
 Neither the left or the right part is mandatory.
 Therefore, directives are often used to make some lines appear or disappear in the alternatives:
@@ -34,7 +35,7 @@ Therefore, directives are often used to make some lines appear or disappear in t
 
 
 The second principle is that there could be many alternatives generated for a single base file.
-Each alternation directive is numbered (//alt1, //alt2, //alt3, etc.) and, for a given alternative, all the associated directives are applied together.
+Each alternation directive is numbered (`//alt1`, `//alt2`, `//alt3`, etc.) and, for a given alternative, all the associated directives are applied together.
 
 Example:
 
@@ -71,7 +72,7 @@ Combinations
 ------------
 
 Each directive belong to a given group: either to the anonymous group (by default) or to a numbered group.
-The number of the group is noted before the 'alt'.
+The number of the group is noted before the `alt`.
 
 Example:
 
@@ -79,7 +80,7 @@ Example:
 	base version //2alt1 first alternative of the second group
 	base version //2alt2 second alternative of the second group
 
-alterner.pl also produce alternative files by combining the groups.
+alterner.pl also produces alternative files by combining the groups.
 With two groups, is means that at least three alternative files are created: one with the first group, one with the second group, and one with both.
 
 If there is more than one alternative by group, even more alternative files are created.
@@ -97,13 +98,13 @@ For instance, with 4 groups of 4 alternatives each, 624 alternative files are ge
 Usage of alterner.pl
 --------------------
 
-alterner.pl [options] input-file.ext
+    alterner.pl [options] input-file.ext
 
-Produce alternatives of input-file.ext according to the alternation directives present in the file.
-By default, alternatives are named input-file.altX.ext (where X is a number) and are generated in a alt/ sub-directory.
-If groups are used, the altX is replaced by YaltX (where Y is the number of the group) and the combination of multiple groups produce multiple YaltX (separated with dots).
+Produce alternatives of `input-file.ext` according to the alternation directives present in the file.
+By default, alternatives are named `input-file.altX.ext` (where `X` is a number) and are generated in a `alt/` sub-directory.
+If groups are used, the `altX` is replaced by `YaltX` (where `Y` is the number of the group) and the combination of multiple groups produce multiple `YaltX` (separated with dots).
 If the directory does not exist, it is created.
-The path of input-file.ext is not considered: only the base name of the file and its extension are used to name the alternatives.
+The path of `input-file.ext` is not considered: only the base name of the file and its extension are used to name the alternatives.
 
 alterner.pl also outputs the path of each generated alternative (a path by line).
 This list can be used to know what are the generated alternatives.
@@ -112,32 +113,32 @@ This list can be used to know what are the generated alternatives.
 Options
 -------
 
-* -d directory
+* `-d` directory
 
   Generate the alternatives in the specified directory.
-  By default, the directory is alt/.
-  Use . for the current directory.
+  By default, the directory is `alt/`.
+  Use `.` for the current directory.
 
-* --start pattern
+* `--start` pattern
 
   Alternation directives start with the specified pattern.
   This option is used to indicate what starts comments in the language.
-  By default, the start pattern is //.
-  For example, --start '#' means that the alternatives are #alt1, #alt2, etc.
+  By default, the start pattern is `//`.
+  For example, `--start '#'` means that the alternatives are `#alt1`, `#alt2`, etc.
 
-  Note: an alternation directive can also be terminated the start pattern.
-  For example, --start '#' means that the alternatives can also be #alt1#, #alt2#, etc.
+  Note: an alternation directive can also be terminated by the start pattern.
+  For example, `--start '#'` means that the alternatives can also be `#alt1#`, `#alt2#`, etc.
 
-* --end pattern
+* `--end` pattern
 
   Lines with alternation directives end with the specified pattern.
   This option is used to indicate what end comments in the language when multiline comments are used.
   By default, the end pattern is the empty string. 
-  For example, start with /* and end with */ for using alternatives in a C file. 
+  For example, start with `/*` and end with `*/` for using alternatives in a C file. 
 
   The principle of the end pattern is that:
 
-  1. alternation directive are ignored if the end pattern is not present at the end of the line;
+  1. alternation directives are ignored if the end pattern is not present at the end of the line;
   2. the end pattern is not swapped when a directive is applied (it means the end pattern stay at the end of the line).
 
 Examples
