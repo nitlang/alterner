@@ -41,7 +41,7 @@ ls *.java >/dev/null 2>&1 || {
 }
 
 test_count=0
-total_count=`ls -1 *.java *.c | wc -l`
+total_count=`ls -1 *.java *.c *.pl | wc -l`
 
 echo "1..$total_count"
 
@@ -51,6 +51,10 @@ done
 
 for f in *.c; do
 	test_run "$f" --start '/*' --end '*/'
+done
+
+for f in *.pl; do
+	test_run "$f" --start '#'
 done
 
 exit 0
