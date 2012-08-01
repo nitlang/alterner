@@ -7,21 +7,30 @@
 # rest: additional options to alterner.pl
 test_run() {
 	test_count=$(($test_count + 1))
-	if output=`test_run_ "$@" 2>&1`; then
-		echo "ok $test_count $1"
+
+	output=`mktemp`
+	directive=
+	if test_run_ "$@" >$output 2>&1; then
+		echo "ok $test_count $1 $directive"
 	else
-		echo "not ok $test_count $1"
+		echo "not ok $test_count $1 $directive"
 	fi
-	test -z "$output" || printf "%s\n" "$output" | sed 's/^/# /'
+	sed 's/^/# /' $output
+	rm $output
 }
 test_run_() {
+	# Warning, this function is not executed in a subshell
 	f="$1" &&
 	shift &&
 	d="out/$f.alt" &&
 	rm -rf "$d/" 2>/dev/null || : &&
 	mkdir -p "$d/" &&
 	../alterner.pl -d "$d" "$@" "$f" > "$d/list" &&
-	diff -u "$d/" "sav/$f.alt/"
+	if test -d "sav/$f.alt/"; then
+		diff -u "$d/" "sav/$f.alt/"
+	else
+		directive="# SKIP no sav/$f.alt/ directory"
+	fi
 }
 
 # try to be in the good directory
